@@ -67,7 +67,7 @@ export interface Submission {
 export interface PaymentRecord {
   id: string
   ambassadorId: string
-  amount: float
+  amount: number
   status: PaymentStatus
   createdAt: Date
   paidAt?: Date
