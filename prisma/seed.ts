@@ -87,7 +87,7 @@ async function main() {
   console.log('✓ Opportunity 2 created:', opp2.title)
 
   // Create sample Reddit posts
-  const post1 = await prisma.redditPost.upsert({
+  const _post1 = await prisma.redditPost.upsert({
     where: { redditId: 'sample_post_1' },
     update: {},
     create: {
