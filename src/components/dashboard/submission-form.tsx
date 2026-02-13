@@ -8,7 +8,6 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Alert } from '@/components/ui/alert'
 import { Form, FormGroup } from '@/components/ui/form'
 import { Opportunity } from '@/types'
-import { extractRedditIds } from '@/lib/utils'
 
 interface SubmissionFormProps {
   opportunities: Opportunity[]

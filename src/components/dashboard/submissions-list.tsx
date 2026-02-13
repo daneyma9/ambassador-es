@@ -27,7 +27,9 @@ export function SubmissionsList({
     return (
       <div className="space-y-4">
         {[1, 2, 3].map((i) => (
-          <Card key={i} className="h-24 animate-pulse bg-gray-200" />
+          <Card key={i} className="h-24 animate-pulse bg-gray-200">
+            <div />
+          </Card>
         ))}
       </div>
     )
