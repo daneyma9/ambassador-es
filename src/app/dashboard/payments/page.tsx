@@ -93,7 +93,7 @@ export default async function PaymentsPage() {
                 Cada Viernes
               </p>
               <p className="text-xs text-gray-500 mt-1">
-                {pendingAmount > 0 ? `${formatCurrency(pendingAmount)} 💰' : '—'}
+                {pendingAmount > 0 ? `${formatCurrency(pendingAmount)} 💰` : '—'}
               </p>
             </div>
           </CardContent>
