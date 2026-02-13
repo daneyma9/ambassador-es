@@ -1,0 +1,298 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Users (Ambassadors + Admins)
+model User {
+  id              String    @id @default(cuid())
+  email           String    @unique
+  name            String
+  role            Role      @default(AMBASSADOR)
+  status          UserStatus @default(PENDING_VERIFICATION)
+
+  // Profile
+  profilePicture  String?
+  bio             String?
+  socialLinks     Json? // { twitter: "url", linkedin: "url" }
+
+  // Payment data
+  bankAccount     String? // IBAN encrypted
+  bankAccountVerified Boolean @default(false)
+
+  // Statistics
+  totalEarnings   Float     @default(0)
+  approvedSubmissions Int   @default(0)
+  rejectedSubmissions Int   @default(0)
+  totalComments   Int       @default(0)
+
+  // Timestamps
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  // Relations
+  submissions     Submission[]
+  paymentRecords  PaymentRecord[]
+  notifications   Notification[]
+  auditLogs       AuditLog[]
+
+  @@index([email])
+  @@index([role])
+  @@index([status])
+}
+
+enum Role {
+  AMBASSADOR
+  ADMIN
+  SUPER_ADMIN
+}
+
+enum UserStatus {
+  PENDING_VERIFICATION
+  VERIFIED
+  APPROVED
+  REJECTED
+  SUSPENDED
+}
+
+// Opportunities for collaboration
+model Opportunity {
+  id              String    @id @default(cuid())
+  title           String
+  description     String    @db.Text
+  category        String // "fiscal", "impuestos", "empresa", etc
+  reward          Float // Euros per comment
+  status          OpportunityStatus @default(ACTIVE)
+
+  // Details
+  context         String?   @db.Text
+  suggestedText   String?   @db.Text
+  requirements    Json? // { minReputation: 100, onlyVerified: true }
+
+  // Control
+  maxRedemptions  Int       @default(-1) // -1 = unlimited
+  currentRedemptions Int    @default(0)
+
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  createdBy       String
+
+  submissions     Submission[]
+
+  @@index([status])
+  @@index([category])
+}
+
+enum OpportunityStatus {
+  ACTIVE
+  PAUSED
+  COMPLETED
+  ARCHIVED
+}
+
+// Submissions from ambassadors
+model Submission {
+  id              String    @id @default(cuid())
+
+  // Relations
+  ambassadorId    String
+  ambassador      User      @relation(fields: [ambassadorId], references: [id], onDelete: Cascade)
+  opportunityId   String
+  opportunity     Opportunity @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
+
+  // Content
+  redditUrl       String    @db.Text
+  redditPostId    String?   // Reddit post ID
+  redditCommentId String?   // Reddit comment ID
+  screenshotUrl   String?   @db.Text
+  description     String?   @db.Text
+
+  // Validation
+  status          SubmissionStatus @default(PENDING_REVIEW)
+  rejectionReason String?   @db.Text
+
+  // Compensation
+  amount          Float
+
+  // Metadata
+  redditMetadata  Json? // { upvotes, timestamp, author_reputation }
+
+  // Timestamps
+  submittedAt     DateTime  @default(now())
+  reviewedAt      DateTime?
+  reviewedBy      String?
+
+  @@index([ambassadorId])
+  @@index([opportunityId])
+  @@index([status])
+  @@index([submittedAt])
+}
+
+enum SubmissionStatus {
+  PENDING_REVIEW
+  APPROVED
+  REJECTED
+  PAYMENT_PENDING
+  PAID
+}
+
+// Reddit posts tracking
+model RedditPost {
+  id              String    @id @default(cuid())
+
+  redditId        String    @unique
+  redditUrl       String    @db.Text
+  title           String
+  author          String
+  content         String    @db.Text
+
+  // Analysis
+  hasTaxDownMention Boolean @default(false)
+  isFiscalityRelated Boolean @default(false)
+  sentiment       String? // "positive", "neutral", "negative"
+  keywords        String[] // ["impuestos", "iva", "declaración"]
+
+  // Reddit data
+  score           Int       @default(0)
+  numComments     Int       @default(0)
+
+  // Interaction
+  isArchived      Boolean   @default(false)
+  relevanceScore  Float     @default(0) // 0-100
+
+  createdAt       DateTime  @default(now())
+  scannedAt       DateTime  @default(now())
+
+  @@index([hasTaxDownMention])
+  @@index([isFiscalityRelated])
+  @@index([scannedAt])
+}
+
+// Reddit comments tracking
+model RedditComment {
+  id              String    @id @default(cuid())
+
+  redditId        String    @unique
+  redditUrl       String    @db.Text
+  postId          String
+  author          String
+  content         String    @db.Text
+
+  hasTaxDownMention Boolean @default(false)
+  isFiscalityRelated Boolean @default(false)
+
+  score           Int       @default(0)
+  createdAt       DateTime  @default(now())
+  scannedAt       DateTime  @default(now())
+
+  @@index([hasTaxDownMention])
+  @@index([isFiscalityRelated])
+  @@index([scannedAt])
+}
+
+// Payments
+model PaymentRecord {
+  id              String    @id @default(cuid())
+
+  ambassadorId    String
+  ambassador      User      @relation(fields: [ambassadorId], references: [id], onDelete: Cascade)
+
+  // Details
+  amount          Float
+  currency        String    @default("EUR")
+  status          PaymentStatus @default(PENDING)
+
+  // Payment batch
+  batchId         String?
+
+  // Submissions included
+  submissions     String[] // Submission IDs
+  submissionCount Int
+
+  // Payment information
+  paymentMethod   String // "bank_transfer", "stripe", etc
+  bankAccount     String? // IBAN (encrypted)
+
+  // Metadata
+  reference       String? // Unique payment reference
+  externalTxId    String? // External transaction ID
+  errorMessage    String? @db.Text
+
+  // Timestamps
+  createdAt       DateTime  @default(now())
+  processedAt     DateTime?
+  paidAt          DateTime?
+
+  @@index([ambassadorId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+enum PaymentStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  REJECTED
+}
+
+// Notifications
+model Notification {
+  id              String    @id @default(cuid())
+
+  userId          String
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  type            NotificationType
+  title           String
+  message         String    @db.Text
+
+  // Related resource
+  relatedId       String?
+
+  isRead          Boolean   @default(false)
+
+  createdAt       DateTime  @default(now())
+  readAt          DateTime?
+
+  @@index([userId])
+  @@index([isRead])
+}
+
+enum NotificationType {
+  SUBMISSION_APPROVED
+  SUBMISSION_REJECTED
+  PAYMENT_PROCESSED
+  NEW_OPPORTUNITY
+  PAYMENT_FAILED
+  ACCOUNT_SUSPENDED
+}
+
+// Audit logging
+model AuditLog {
+  id              String    @id @default(cuid())
+
+  userId          String?
+  user            User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  action          String // "SUBMISSION_APPROVED", "USER_CREATED", etc
+  resource        String // "submission", "user", "payment"
+  resourceId      String
+
+  changes         Json? // Changes made
+  ipAddress       String?
+  userAgent       String?
+
+  createdAt       DateTime  @default(now())
+
+  @@index([userId])
+  @@index([action])
+  @@index([createdAt])
+}
