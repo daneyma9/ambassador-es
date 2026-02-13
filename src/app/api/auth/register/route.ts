@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { registerSchema } from '@/lib/validation'
 import { db } from '@/lib/db'
+import { sendVerificationEmail } from '@/lib/email'
 
 export async function POST(request: NextRequest) {
   try {
@@ -34,6 +35,10 @@ export async function POST(request: NextRequest) {
 
     // TODO: For MVP, storing plain password. In production, use bcrypt properly
 
+    // Generate verification code (6 digits)
+    const verificationCode = Math.floor(100000 + Math.random() * 900000).toString()
+    const verificationCodeExpiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000) // 24 hours
+
     // Create user
     const user = await db.user.create({
       data: {
@@ -41,14 +46,21 @@ export async function POST(request: NextRequest) {
         name,
         role: 'AMBASSADOR',
         status: 'PENDING_VERIFICATION',
+        verificationCode,
+        verificationCodeExpiresAt,
       },
     })
 
-    // TODO: Send verification email with code
+    // Send verification email
+    await sendVerificationEmail({
+      ambassadorEmail: email,
+      ambassadorName: name,
+      verificationCode,
+    })
 
     return NextResponse.json(
       {
-        message: 'Usuario registrado exitosamente',
+        message: 'Usuario registrado exitosamente. Revisa tu email para verificar tu cuenta.',
         user: {
           id: user.id,
           email: user.email,

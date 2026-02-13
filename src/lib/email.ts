@@ -133,6 +133,23 @@ export const emailTemplates = {
       </div>
     `,
   }),
+
+  verifyEmail: (data: { ambassadorName: string; verificationCode: string }) => ({
+    subject: 'Verifica tu email - Portal de Embajadores TaxDown',
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2>¡Hola, ${data.ambassadorName}! 👋</h2>
+        <p>Gracias por registrarte en el Portal de Embajadores de TaxDown.</p>
+        <p>Para verificar tu email, usa este código:</p>
+        <div style="background-color: #F3F4F6; border: 2px solid #E5E7EB; padding: 20px; border-radius: 8px; text-align: center; margin: 20px 0;">
+          <p style="font-size: 32px; font-weight: bold; color: #4F46E5; letter-spacing: 4px; margin: 0;">${data.verificationCode}</p>
+        </div>
+        <p>Este código expira en 24 horas.</p>
+        <p>Si no solicitaste esta verificación, ignora este email.</p>
+        <p style="margin-top: 24px; font-size: 12px; color: #666;">TaxDown Ambassador Portal</p>
+      </div>
+    `,
+  }),
 }
 
 // Send notification emails
@@ -199,6 +216,23 @@ export async function notifyWelcomeAmbassador(data: {
 }): Promise<boolean> {
   const template = emailTemplates.welcomeAmbassador({
     ambassadorName: data.ambassadorName,
+  })
+
+  return sendEmail({
+    to: data.ambassadorEmail,
+    subject: template.subject,
+    html: template.html,
+  })
+}
+
+export async function sendVerificationEmail(data: {
+  ambassadorEmail: string
+  ambassadorName: string
+  verificationCode: string
+}): Promise<boolean> {
+  const template = emailTemplates.verifyEmail({
+    ambassadorName: data.ambassadorName,
+    verificationCode: data.verificationCode,
   })
 
   return sendEmail({
