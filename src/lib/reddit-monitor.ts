@@ -266,7 +266,6 @@ export class RedditMonitor {
         relevanceScore: 85,
       },
       {
-        redditId: 'comment2',
         redditId: 'https://reddit.com/r/Spain/comments/post1/_/comment2',
         postId: 'post1',
         author: 'tax_consultant',
