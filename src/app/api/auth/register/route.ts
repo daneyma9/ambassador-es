@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const { email, name, password } = result.data
+    const { email, name } = result.data
 
     // Check if user already exists
     const existingUser = await db.user.findUnique({
@@ -32,9 +32,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Hash password
     // TODO: For MVP, storing plain password. In production, use bcrypt properly
-    const hashedPassword = password // Placeholder - implement bcrypt in production
 
     // Create user
     const user = await db.user.create({

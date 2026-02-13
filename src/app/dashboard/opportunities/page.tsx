@@ -1,5 +1,5 @@
 import { db } from '@/lib/db'
-import { Card, CardContent, CardHeader } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { OpportunitiesList } from '@/components/dashboard/opportunities-list'
 
 export default async function OpportunitiesPage() {

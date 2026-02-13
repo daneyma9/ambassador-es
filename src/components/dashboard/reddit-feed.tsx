@@ -3,7 +3,6 @@
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { formatDate } from '@/lib/utils'
-import Link from 'next/link'
 
 interface RedditItem {
   id: string
@@ -37,7 +36,9 @@ export function RedditFeed({
     return (
       <div className="space-y-4">
         {[1, 2, 3].map((i) => (
-          <Card key={i} className="h-40 animate-pulse bg-gray-200" />
+          <Card key={i} className="h-40 animate-pulse bg-gray-200">
+            <div />
+          </Card>
         ))}
       </div>
     )

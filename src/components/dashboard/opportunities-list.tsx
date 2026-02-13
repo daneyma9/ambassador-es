@@ -19,7 +19,9 @@ export function OpportunitiesList({
     return (
       <div className="space-y-4">
         {[1, 2, 3].map((i) => (
-          <Card key={i} className="h-32 animate-pulse bg-gray-200" />
+          <Card key={i} className="h-32 animate-pulse bg-gray-200">
+            <div />
+          </Card>
         ))}
       </div>
     )

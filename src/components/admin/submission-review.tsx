@@ -4,7 +4,6 @@ import { useState } from 'react'
 import { Submission } from '@/types'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { Alert } from '@/components/ui/alert'
 import { formatDate, formatCurrency } from '@/lib/utils'
 

@@ -1,5 +1,5 @@
 import { db } from '@/lib/db'
-import { Card, CardContent, CardHeader } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { RedditFeed } from '@/components/dashboard/reddit-feed'
 
 export default async function RedditTrackerPage() {

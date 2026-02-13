@@ -5,7 +5,7 @@ import { db } from '@/lib/db'
 import { notifySubmissionApproved } from '@/lib/email'
 
 export async function PATCH(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {

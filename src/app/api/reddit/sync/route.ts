@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
 }
 
 // Endpoint to generate sample data for testing
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     // Only allow in development
     if (process.env.NODE_ENV === 'production') {
