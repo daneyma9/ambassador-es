@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { registerSchema } from '@/lib/validation'
 import { db } from '@/lib/db'
-import bcrypt from 'bcrypt'
 
 export async function POST(request: NextRequest) {
   try {
