@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
     const encryptedIBAN = encryptIBAN(bankAccount)
 
     // Update user with encrypted IBAN
-    const updatedUser = await db.user.update({
+    await db.user.update({
       where: { id: user.id },
       data: {
         bankAccount: encryptedIBAN,
