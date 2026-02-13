@@ -1,21 +1,11 @@
-import nodemailer from 'nodemailer'
+import { Resend } from 'resend'
 
-// Email configuration
+// Resend configuration
+const resend = new Resend(process.env.RESEND_API_KEY)
+
 const emailConfig = {
-  from: process.env.SENDGRID_FROM_EMAIL || 'noreply@taxdown.es',
-  apiKey: process.env.SENDGRID_API_KEY,
+  from: process.env.RESEND_FROM_EMAIL || 'noreply@taxdown.es',
 }
-
-// For development, use a test transport
-const transporter = nodemailer.createTransport({
-  host: 'smtp.ethereal.email',
-  port: 587,
-  secure: false,
-  auth: {
-    user: process.env.EMAIL_USER || 'test@ethereal.email',
-    pass: process.env.EMAIL_PASS || 'test',
-  },
-})
 
 export interface EmailParams {
   to: string
@@ -31,20 +21,24 @@ export async function sendEmail({
   text,
 }: EmailParams): Promise<boolean> {
   try {
-    if (!emailConfig.from) {
+    if (!emailConfig.from || !process.env.RESEND_API_KEY) {
       console.warn('Email not configured, skipping send')
       return false
     }
 
-    const result = await transporter.sendMail({
+    const result = await resend.emails.send({
       from: emailConfig.from,
       to,
       subject,
       html,
-      text: text || html.replace(/<[^>]*>/g, ''),
     })
 
-    console.log('Email sent:', result.messageId)
+    if (result.error) {
+      console.error('Email send error:', result.error)
+      return false
+    }
+
+    console.log('Email sent:', result.data?.id)
     return true
   } catch (error) {
     console.error('Email send error:', error)
