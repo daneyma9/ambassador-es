@@ -73,7 +73,7 @@ export function SubmissionsList({
                   </div>
 
                   <p className="text-sm text-gray-600 mb-3">
-                    {submission.description || 'Sin descripción'}
+                    {submission.opportunity?.description || 'Sin descripción'}
                   </p>
 
                   <div className="flex flex-wrap gap-4 text-sm text-gray-600">

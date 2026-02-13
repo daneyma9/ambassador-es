@@ -1,7 +1,6 @@
 import type { NextAuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { db } from './db'
-import bcrypt from 'bcrypt'
 
 export const authOptions: NextAuthOptions = {
   providers: [
