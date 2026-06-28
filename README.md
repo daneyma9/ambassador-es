@@ -135,6 +135,38 @@ CRON_SECRET             # Para jobs automáticos
 ENCRYPTION_KEY          # Para encriptar datos sensibles
 ```
 
+## Atelier Renaissance — Interactive Fashion Film
+
+An experimental, cinematic WebGL experience lives at **`/atelier`**: a
+scroll-driven digital museum where renaissance masterworks blend with floating
+streetwear (sneakers, skateboards, shopping bags), atmospheric fog, bloom
+lighting and oversized editorial serif typography.
+
+**Stack:** Three.js via React Three Fiber + drei, `@react-three/postprocessing`
+(bloom / depth-of-field / vignette / grain), **GSAP + ScrollTrigger** for the
+cinematic chapter transitions, and **Lenis** for buttery smooth scrolling.
+
+```
+src/app/atelier/
+├── page.tsx            # Route + metadata (server component)
+└── atelier.css         # Editorial typography + layout (scoped to .atelier)
+
+src/components/atelier/
+├── AtelierExperience.tsx  # Client orchestrator: Lenis <-> GSAP <-> Canvas
+├── Scene.tsx              # R3F canvas: camera rig, lights, fog, postprocessing
+├── Products.tsx           # Procedural floating streetwear (sneaker/board/bag)
+├── Paintings.tsx          # Floating classical paintings + gilded frames
+├── Chapters.tsx           # Scroll-driven editorial typography
+└── scroll-store.ts        # Shared scroll progress bridge (Lenis -> useFrame)
+```
+
+The streetwear products are built procedurally from primitives so the
+experience is fully self-contained (no asset pipeline required). To use real
+Blender/Spline GLTF models instead, drop them in and swap the meshes inside
+`Products.tsx` for `<primitive object={gltf.scene} />` — the float/scroll motion
+wrappers stay identical. Painting textures load public-domain artwork from
+Wikimedia (CORS-enabled) with a procedural sfumato fallback if offline.
+
 ## Documentación
 
 - [Plan de Implementación](./PLAN.md)

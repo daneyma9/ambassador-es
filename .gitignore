@@ -13,6 +13,9 @@
 /out/
 *.pem
 
+# TypeScript
+*.tsbuildinfo
+
 # Production
 /build
 

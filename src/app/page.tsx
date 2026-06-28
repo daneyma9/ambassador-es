@@ -28,6 +28,13 @@ export default async function Home() {
           </a>
         </div>
 
+        <a
+          href="/atelier"
+          className="inline-block mt-8 text-sm tracking-[0.3em] uppercase text-indigo-200 hover:text-white transition-colors border-b border-indigo-300/40 pb-1"
+        >
+          Enter the Atelier — an interactive fashion film ↗
+        </a>
+
         <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
           <div className="text-left">
             <div className="text-4xl mb-2">💬</div>

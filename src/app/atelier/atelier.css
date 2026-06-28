@@ -1,0 +1,266 @@
+/* ============================================================
+   Atelier Renaissance — cinematic experience styling
+   Oversized editorial serif typography + luxury campaign feel.
+   Scoped under .atelier so it never leaks into the portal UI.
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,600;1,6..96,400&family=Inter:wght@300;400;500&display=swap');
+
+/* Recommended Lenis baseline (only active while Lenis controls the page). */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.atelier {
+  --ink: #f3e9d6;
+  --gold: #cba85f;
+  --muted: rgba(243, 233, 214, 0.62);
+  --bg: #0d0907;
+
+  position: relative;
+  width: 100%;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Inter', -apple-system, sans-serif;
+  opacity: 0;
+  transition: opacity 1.6s ease;
+}
+.atelier.is-entered {
+  opacity: 1;
+}
+
+/* Fixed WebGL backdrop */
+.atelier__canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  height: 100vh;
+  width: 100vw;
+}
+.atelier__loading {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: clamp(1rem, 2vw, 1.4rem);
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  background: radial-gradient(circle at 50% 40%, #1a110b, #0d0907 70%);
+}
+
+/* Editorial film scrolls above the canvas */
+.atelier__film {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+}
+
+.chapter {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(1.5rem, 6vw, 7rem);
+  box-sizing: border-box;
+}
+.chapter--right {
+  align-items: flex-end;
+  text-align: right;
+}
+.chapter--left {
+  align-items: flex-start;
+  text-align: left;
+}
+.chapter--center {
+  align-items: center;
+  text-align: center;
+}
+.chapter--hero,
+.chapter--colophon {
+  align-items: center;
+  text-align: center;
+  min-height: 100vh;
+}
+
+/* ----- Typography ----- */
+.kicker {
+  font-family: 'Inter', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.5em;
+  font-size: clamp(0.6rem, 1vw, 0.8rem);
+  color: var(--gold);
+  margin-bottom: 1.6rem;
+}
+
+.display {
+  font-family: 'Bodoni Moda', 'Cormorant Garamond', serif;
+  font-weight: 600;
+  line-height: 0.92;
+  font-size: clamp(3.2rem, 13vw, 13rem);
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  margin: 0;
+}
+.display span {
+  display: block;
+}
+.display__italic {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-weight: 400;
+  text-transform: lowercase;
+  letter-spacing: 0;
+  color: var(--gold);
+  font-size: 0.78em;
+}
+.display--small {
+  font-size: clamp(2.4rem, 8vw, 7rem);
+}
+
+.heading {
+  font-family: 'Bodoni Moda', serif;
+  font-weight: 600;
+  line-height: 0.96;
+  font-size: clamp(2.6rem, 8vw, 7.5rem);
+  letter-spacing: -0.015em;
+  text-transform: uppercase;
+  margin: 0;
+}
+.heading--xl {
+  font-size: clamp(3rem, 10vw, 9rem);
+}
+.heading em {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-weight: 400;
+  text-transform: none;
+  color: var(--gold);
+}
+
+.chapter__no {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: clamp(2rem, 5vw, 4rem);
+  color: var(--muted);
+  margin-bottom: 0.5rem;
+}
+
+.lede {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  font-size: clamp(1.1rem, 2.2vw, 1.9rem);
+  line-height: 1.45;
+  max-width: 34ch;
+  margin: 2rem auto 0;
+  color: var(--ink);
+}
+.body {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  font-size: clamp(1rem, 1.8vw, 1.5rem);
+  line-height: 1.5;
+  max-width: 38ch;
+  margin-top: 1.8rem;
+  color: var(--muted);
+}
+.chapter--right .body {
+  margin-left: auto;
+}
+
+.tag {
+  position: absolute;
+  bottom: clamp(2rem, 8vh, 6rem);
+  font-family: 'Inter', sans-serif;
+  letter-spacing: 0.45em;
+  text-transform: uppercase;
+  font-size: clamp(0.7rem, 1.4vw, 1rem);
+  color: var(--gold);
+  opacity: 0.85;
+}
+.chapter--right .tag { right: clamp(1.5rem, 6vw, 7rem); }
+.chapter--left .tag { left: clamp(1.5rem, 6vw, 7rem); }
+.chapter--center .tag { left: 50%; transform: translateX(-50%); }
+
+.scroll-cue {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Inter', sans-serif;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  color: var(--muted);
+  animation: cue 2.4s ease-in-out infinite;
+}
+@keyframes cue {
+  0%, 100% { opacity: 0.3; transform: translate(-50%, 0); }
+  50% { opacity: 0.9; transform: translate(-50%, 8px); }
+}
+
+.credits {
+  display: flex;
+  gap: clamp(1rem, 4vw, 3rem);
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 2.5rem;
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(0.65rem, 1.1vw, 0.8rem);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.cta {
+  display: inline-block;
+  margin-top: 3rem;
+  padding: 0.9rem 2.4rem;
+  border: 1px solid var(--gold);
+  border-radius: 999px;
+  font-family: 'Inter', sans-serif;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  color: var(--gold);
+  transition: background 0.5s ease, color 0.5s ease;
+}
+.cta:hover {
+  background: var(--gold);
+  color: #1a110b;
+}
+
+/* Film grain + vignette overlay */
+.atelier__grain {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 3;
+  mix-blend-mode: soft-light;
+  opacity: 0.5;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+}
+.atelier::after {
+  content: '';
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 3;
+  background: radial-gradient(circle at 50% 45%, transparent 45%, rgba(0, 0, 0, 0.55) 100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-cue { animation: none; }
+}
